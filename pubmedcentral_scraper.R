@@ -70,12 +70,12 @@ r_search <- entrez_search(db='pmc', term = "NCT", retmax=20, use_history = TRUE)
 
 r_search$web_history
 
-clinicaltrials = data.frame()
 
 for( seq_start in seq(from=1, to=200, by=50)){
-  stuff <- entrez_summary(db="pmc", 
+  stuff <- entrez_fetch(db="pmc", 
                          web_history=r_search$web_history,
-                        # rettype="XML", 
+                          rettype="", 
+                       retmode = 'xml',
                           retmax=50, retstart=seq_start)
  # stuff$i <- seq_start
   # clinicaltrials[[seq_start]] <- stuff
@@ -84,16 +84,16 @@ for( seq_start in seq(from=1, to=200, by=50)){
 }
 
 
+require(XML)
+all_trials <- xmlParse("clinicaltrials.xml")
+df <- xmlToDataFrame(all_trials, nodes= getNodeSet(all_trials, ""))
 
 
-all_trials <- do.call(rbind, clinicaltrials)
-all_formatted <- split(all_trials, rep(1:ncol(all_trials), each = nrow(all_trials)))
-
-date_and_cite <- extract_from_esummary(stuff, c("pubdate", "pmcrefcount",  "title", 
-                                                     "pmcid", 
-                                                     "doi"))
-
-data_formatted <- as.data.frame(knitr::kable(head(t(date_and_cite)), row.names=FALSE))
+# date_and_cite <- extract_from_esummary(stuff, c("pubdate", "pmcrefcount",  "title", 
+#                                                      "pmcid", 
+#                                                      "doi"))
+# 
+# data_formatted <- as.data.frame(knitr::kable(head(t(date_and_cite)), row.names=FALSE))
 
 <- recs$ids
 
