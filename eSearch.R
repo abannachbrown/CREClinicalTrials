@@ -70,7 +70,8 @@ eSearch = function(searchterms, nreturns=10, database="pmc", sortby="relevance")
                        "&", sortmethod, "&", query)
   
   ## get and parse xml data returned by eSearch
-  data.esearch = getURL(url.esearch)
+  # data.esearch = getURL(url.esearch)
+  data.esearch = getURL("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science[journal]+AND+breast+cancer+AND+2008[pdat]&retmax=10")
   data.xml = xmlParse(data.esearch)
   
   ## get uid's/pmcid's

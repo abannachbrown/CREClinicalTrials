@@ -2,7 +2,6 @@
 ## SCRAPE PUBMED CENTRAL FULL TEXT ARTICLES FOR FIGURES MATCHING 
 ## USER-SPECIFIED KEYWORDS (TOPIC AND PLOT TYPE), THEN STORE 
 ## MATCHES INTO SQLITE DATABASE
-## from EFavDB - https://github.com/EFavDB/PubmedCentral_Scraper 
 
 ## FILE DEPENDENCIES:
 ## eSearch.R
@@ -21,11 +20,11 @@ retmax = 10
 
 ## topic terms to be queried via the pubmed search engine
 #query.topic = c("Docetaxel", "Docetaxol")
-query.topic = c("Paclitaxel")
+query.topic = c("radiation")
 
 ## topic/drug label for database
 #topic = "Docetaxel"
-topic = "Paclitaxel"
+topic = "cancer"
 
 ## keywords to identify plot type to be captured
 query.plottype = c("tumor growth", "tumor volume",
@@ -41,7 +40,6 @@ plot_type = "TGI"
 ##==================================================================
 library("RSQLite")
 library("DBI")
-library(rentrez)
 
 source("eSearch.R")
 source("scrapeArticle.R")
@@ -58,45 +56,7 @@ if(!dbExistsTable(con, "figure_text")) stop("table 'figure_text' does not exist"
 ##==================================================================
 ## PERFORM SIMPLE SEARCH (eSearch) ON PUBMED CENTRAL AND
 ## RETRIEVE UID'S OUTPUT BY QUERY
-uids = eSearch((#list(
-  query.topic # , query.plottype)
-                    ), retmax)
-
-
-# what is searchable in the pmc database
-entrez_db_searchable("pmc")
-
-r_search <- entrez_search(db='pmc', term = "NCT", retmax=20, use_history = TRUE)
-
-r_search$web_history
-
-
-for( seq_start in seq(from=1, to=200, by=50)){
-  stuff <- entrez_fetch(db="pmc", 
-                         web_history=r_search$web_history,
-                          rettype="", 
-                       retmode = 'xml',
-                          retmax=50, retstart=seq_start)
- # stuff$i <- seq_start
-  # clinicaltrials[[seq_start]] <- stuff
-    cat(stuff, file="clinicaltrials.xml", append=TRUE)
-  cat(seq_start+49, "articles downloaded\r")
-}
-
-
-require(XML)
-all_trials <- xmlParse("clinicaltrials.xml")
-df <- xmlToDataFrame(all_trials, nodes= getNodeSet(all_trials, ""))
-
-
-# date_and_cite <- extract_from_esummary(stuff, c("pubdate", "pmcrefcount",  "title", 
-#                                                      "pmcid", 
-#                                                      "doi"))
-# 
-# data_formatted <- as.data.frame(knitr::kable(head(t(date_and_cite)), row.names=FALSE))
-
-<- recs$ids
-
+uids = eSearch(list(query.topic, query.plottype), retmax)
 print(paste0("Retrieved ", length(uids), " pmcids from query results."))
 
 ##==================================================================

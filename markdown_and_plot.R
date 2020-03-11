@@ -16,10 +16,10 @@
 db = "myDb.sqlite"
 
 ## topic/drug label for database
-topic = "Docetaxel"
+topic = "ketamine"
 
 ## plot type label for database
-plot_type = "TGI"
+# plot_type = "TGI"
 
 ## filename of generated markdown code
 md.filename = "makeHTMLplots.rmd"
@@ -31,10 +31,11 @@ library("knitr")
 source('generate_markdown_code.R')
 generate_markdown_code(database.name = db,
                        topic = topic,
-                       plot_type = plot_type,
+                       # plot_type = plot_type,
                        md.filename = md.filename)
 
 ## GENERATE HTML FILE CONTAINING SCRAPED PLOTS AND METADATA
 html.filename = sprintf("scraper_%s_plots_for_%s.html", 
-                        plot_type, topic)
+                        #plot_type, 
+                        topic)
 knit2html(md.filename, output=html.filename)
