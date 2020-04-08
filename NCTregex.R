@@ -34,6 +34,8 @@ grep(pattern = "\\b(NCT|ISRCTN)[0-9]{8}\\b", test_abstract, value = FALSE)
 str_extract(test_abstract, "\\b(NCT|ISRCTN)[0-9]{8}\\b") 
 # ISRCTN
 
+## pan africa trials
+# e.g PACTR201606001679337
 
 ## for each row in dataframe 
 
